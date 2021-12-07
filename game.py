@@ -11,7 +11,8 @@ import random
 import time
 
 
-def main(pos):
+# def main(pos):
+def main():
     # set the window size
     WIDTH = 600
     HEIGHT = 400
@@ -54,9 +55,12 @@ def main(pos):
 
 
     data = {}
+    ring={'new_game':0,'quit':0,'dojo':0}
     fruits = {'apple', 'banana', 'basaha', 'peach', 'sandia', 'boom'}
     for fruit in fruits:
         generate_random_fruits(fruit)
+
+
 
     # draw the font
     font_name = pygame.font.match_font('comic.ttf')
@@ -100,6 +104,48 @@ def main(pos):
                     pygame.quit()
                 if event.type == pygame.KEYUP:
                     waiting = False
+    
+    def blitRotate(image, topleft, angle):
+
+        rotated_image = pygame.transform.rotate(image, angle)
+        new_rect = rotated_image.get_rect(center = image.get_rect(topleft = topleft).center)
+        gameDisplay.blit(rotated_image, new_rect.topleft)
+        
+
+    def show_gamestart_screen():
+        logo1 = pygame.image.load('images/logo.png')  # background
+        logo2 = pygame.image.load('images/ninja.png')
+        ring_new_game = pygame.image.load('images/new-game.png')
+        ring_quit = pygame.image.load('images/quit.png')
+        ring_dojo = pygame.image.load('images/dojo.png')
+        gameDisplay.blit(background, (0, 0))
+        gameDisplay.blit(logo1, (10, 10))
+        gameDisplay.blit(logo2, (320, 50))
+        gameDisplay.blit(data['boom']['img'], (480, 190))
+        gameDisplay.blit(data['sandia']['img'], (290, 255))
+        gameDisplay.blit(data['peach']['img'], (100, 260))
+
+        # draw_text(gameDisplay, "Press a key to begin!", 64, WIDTH / 2, HEIGHT * 3 / 4)
+        pygame.display.flip()
+
+        waiting = True
+        angle=0
+        while waiting:
+            angle += 2
+            if angle>360:
+                angle=angle//360
+            blitRotate(ring_dojo,(40,200),angle)
+            blitRotate(ring_new_game,(240,200),angle)
+            blitRotate(ring_quit,(440,150),angle)
+            
+            pygame.display.flip()
+            clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                if event.type == pygame.KEYUP:
+                    waiting = False
+
 
 
     first_round = True
@@ -109,7 +155,7 @@ def main(pos):
         # pygame.mouse.set_pos(pos[0][0],pos[0][1])
         if game_over:
             if first_round:
-                show_gameover_screen()
+                show_gamestart_screen()
                 first_round = False
             game_over = False
             player_lives = 3

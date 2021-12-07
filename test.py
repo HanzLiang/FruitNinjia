@@ -11,7 +11,7 @@ def main(pos):
         x=random.randint(0,600)
         y=random.randint(0,400)
         pos[0]=[x,y]
-        time.sleep(0.1)
+        time.sleep(0.03)
         print('subprocess',x,y)
 
 if __name__ == '__main__':
